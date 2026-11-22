@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Udub Mart",
+    "slug": "udub-mart",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "udubmart",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "so.udub.mart",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "so.udub.mart",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0E494B",
+          "image": "./assets/images/icon.png",
+          "imageWidth": 120
+        }
+      ]
+    ],
+    "extra": {
+      "apiUrl": "https://e.udub.so/api/mobile"
+    },
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
