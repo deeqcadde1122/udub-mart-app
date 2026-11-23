@@ -12,6 +12,13 @@ export function appHref(path: string): Href {
   if (kind === 's' && slug) return { pathname: '/products', params: { store: slug } };
   if (kind === 'deals') return { pathname: '/products', params: { deals: '1' } };
   if (kind === 'search') return { pathname: '/products', params: { q: q.get('q') ?? '' } };
+  if (kind === 'orders' && slug) return { pathname: '/order/[trackingId]', params: { trackingId: slug } };
+  if (kind === 'orders') return '/orders';
+  if (kind === 'messages' && slug) return { pathname: '/messages/[id]', params: { id: slug } };
+  if (kind === 'messages') return '/messages';
+  if (kind === 'wishlist') return '/wishlist';
+  if (kind === 'wallet' || kind === 'rewards') return '/wallet';
+  if (kind === 'notifications') return '/notifications';
   return { pathname: '/products', params: {} };
 }
 

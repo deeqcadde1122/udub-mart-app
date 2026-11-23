@@ -86,6 +86,118 @@ export type Config = {
   whatsapp: string | null;
   googleSignIn: boolean;
   links: { privacy: string; terms: string; help: string; deleteAccount: string };
+  pickup: { enabled: boolean; address: string };
+  returnDays: number;
+  payMethods: PayMethod[];
+};
+
+/** auto = paid from the app (PIN on the phone); mobileMoney = ask the number they pay from. */
+export type PayMethod = { id: string; label: string; auto: boolean; mobileMoney: boolean };
+
+export type Address = {
+  id: string;
+  label: 'HOME' | 'OFFICE';
+  recipient: string;
+  phone: string;
+  city: string;
+  district: string;
+  details: string;
+  lat: number | null;
+  lng: number | null;
+};
+
+export type OrderStatus = 'NEW' | 'PAID' | 'ORDERED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+
+export type OrderSummary = {
+  trackingId: string;
+  number: string;
+  status: OrderStatus;
+  total: number;
+  toPay: number;
+  date: string | null;
+  itemCount: number;
+  images: (string | null)[];
+};
+
+export type OrderDetail = {
+  trackingId: string;
+  number: string;
+  status: OrderStatus;
+  date: string | null;
+  fulfilment: 'SHIP' | 'PICKUP';
+  shipTo: { name: string; phone: string; city: string; district: string; details: string };
+  payMethod: { id: string; label: string };
+  paid: boolean;
+  payment: { payNow: boolean; payer: string | null; sendTo: string | null; cardLink: string | null };
+  subtotal: number;
+  discount: number;
+  deliveryFee: number;
+  tax: number;
+  total: number;
+  walletPaid: number;
+  toPay: number;
+  note: string;
+  items: {
+    id: string;
+    productId: string;
+    name: string;
+    image: string | null;
+    qty: number;
+    size: string;
+    color: string;
+    unitPrice: number;
+    lineTotal: number;
+    shipmentId: string | null;
+    returnStatus: string | null;
+  }[];
+  shipments: {
+    id: string;
+    storeName: string;
+    status: OrderStatus;
+    deliveredBy: 'udub' | 'store';
+    deliveryFee: number;
+    deliveryTime: string;
+    deliveredAt: string | null;
+    deliveryCode: string | null;
+  }[];
+  history: { status: OrderStatus; at: string | null }[];
+  webUrl: string;
+};
+
+export type Notification = {
+  id: string;
+  kind: string;
+  orderStatus: string | null;
+  stage: string | null;
+  title: string;
+  body: string;
+  order: { trackingId: string; number: string } | null;
+  link: string | null;
+  read: boolean;
+  at: string | null;
+};
+
+export type InboxItem = {
+  id: string;
+  kind: 'chat' | 'udub' | 'security';
+  name: string;
+  preview: string;
+  at: string | null;
+  unread: boolean;
+  avatar: string | null;
+};
+
+export type ChatMessage = { id: string; body: string; mine: boolean; at: string | null };
+
+export type Conversation =
+  | { kind: 'chat'; store: StoreRef; messages: ChatMessage[] }
+  | { kind: 'udub' | 'security'; title: string; body: string; at: string | null; device: string | null };
+
+export type Wallet = {
+  balance: number;
+  points: number;
+  entries: { id: string; amount: number; kind: string; at: string | null }[];
+  referral: { code: string; link: string } | null;
 };
 
 export type ProductList = {
@@ -162,4 +274,9 @@ export type Cart = {
   total: number;
   count: number;
   freeDeliveryFrom: number | null;
+  pickupAllowed: boolean;
+  promo: { code: string; ok: boolean } | null;
+  /** flat | distance | needsPin | outside | pickup — needsPin/outside block checkout */
+  delivery: string;
+  shipments: { storeName: string; storeSlug: string; deliveredBy: 'udub' | 'store'; fee: number; time: string; subtotal: number }[];
 };

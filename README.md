@@ -6,7 +6,7 @@ The Udub Mart shopping app. One codebase for iPhone and Android, built with **Ex
 The app has no database or prices of its own: everything comes from the website's mobile API
 at `https://e.udub.so/api/mobile/` (repo `udub-store`, see its `docs/MOBILE_API.md`).
 
-## What's in it (step 2)
+## What's in it
 
 - **Sign-in** with phone number + 6-digit code (new accounts are asked for their name)
 - **Home**: search, Showcase, categories, deals, recommended, new arrivals, stores
@@ -14,10 +14,17 @@ at `https://e.udub.so/api/mobile/` (repo `udub-store`, see its `docs/MOBILE_API.
 - **Product page**: photos, price, options (colour/size, incl. imported-product variants),
   quantity, description, how to use, ingredients, reviews, questions, similar products, Add to Cart
 - **Cart**: the account's saved cart (same as the website), change quantity, totals
-- **Account**: wallet and points, Somali/English, help/privacy/terms, sign out, delete account
+- **Checkout**: delivery or pickup, address, payment method (automatic mobile money, manual
+  mobile money, cash on delivery, card), wallet balance, promo code, note
+- **Orders**: list and detail — pay with automatic mobile money (PIN on the phone), the store's
+  number for manual mobile money, the card payment page, the **delivery code** while a shipment
+  is on its way, items, money and timeline
+- **Addresses** (Home/Office) with "Use my location" for the delivery pin
+- **Wishlist** (heart on the product page), **Messages** (chat with a store, messages from
+  Udub, "Message the seller"), **Notifications**, **Wallet** (balance, points, invite link)
+- **Account**: menu with unread counts, Somali/English, help/privacy/terms, sign out, delete account
 
-Not yet: checkout and payment, orders, messages, notifications, wishlist, addresses, Google
-sign-in, push notifications.
+Not yet: push notifications, Google sign-in, returns and reviews from the app.
 
 ## Try it on your phone
 

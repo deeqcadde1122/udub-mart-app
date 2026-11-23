@@ -105,8 +105,12 @@ export default function CartScreen() {
               {cart.freeDeliveryFrom && cart.subtotal < cart.freeDeliveryFrom ? (
                 <Text style={s.opt}>{t('freeFrom', { amount: fmtMoney(cart.freeDeliveryFrom) })}</Text>
               ) : null}
-              <Button title={t('checkout')} onPress={() => {}} disabled style={{ marginTop: S.s }} />
-              <Text style={[ui.muted, { fontSize: 12 }]}>{t('checkoutSoon')}</Text>
+              <Button
+                title={t('checkout')}
+                onPress={() => router.push('/checkout')}
+                disabled={busy || !cart.lines.some((l) => l.available)}
+                style={{ marginTop: S.s }}
+              />
             </View>
           }
         />

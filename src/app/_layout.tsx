@@ -35,6 +35,16 @@ function Screens() {
       />
       <Stack.Screen name="p/[slug]" options={{ title: '' }} />
       <Stack.Screen name="products" options={{ title: '' }} />
+      <Stack.Screen name="checkout" options={{ title: t('checkout') }} />
+      <Stack.Screen name="orders" options={{ title: t('myOrders') }} />
+      <Stack.Screen name="order/[trackingId]" options={{ title: t('orders') }} />
+      <Stack.Screen name="addresses" options={{ title: t('addresses') }} />
+      <Stack.Screen name="address" options={{ title: t('addAddress') }} />
+      <Stack.Screen name="wishlist" options={{ title: t('wishlist') }} />
+      <Stack.Screen name="notifications" options={{ title: t('notifications') }} />
+      <Stack.Screen name="messages" options={{ title: t('messages') }} />
+      <Stack.Screen name="messages/[id]" options={{ title: '' }} />
+      <Stack.Screen name="wallet" options={{ title: t('udubWallet') }} />
     </Stack>
   );
 }

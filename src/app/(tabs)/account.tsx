@@ -1,6 +1,6 @@
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -20,6 +20,15 @@ export default function AccountScreen() {
   const { t, lang, setLang } = useI18n();
   const { user, setUser, signOut, forget } = useAuth();
   const config = useApi<Config>('/config');
+  // Unread counts for the menu (refreshed each time the tab is shown).
+  const me = useApi<{ user: User; unread: { notifications: number; messages: number } }>(user ? '/me' : null);
+  const { reload: reloadMe } = me;
+  useFocusEffect(
+    useCallback(() => {
+      if (user) reloadMe();
+    }, [user, reloadMe]),
+  );
+  const unread = me.data?.unread;
   const [busy, setBusy] = useState(false);
 
   const chooseLang = async (l: Lang) => {
@@ -94,6 +103,17 @@ export default function AccountScreen() {
           </View>
         </View>
 
+        {user ? (
+          <View style={[ui.card, { paddingVertical: S.xs }]}>
+            <Item label={t('myOrders')} onPress={() => router.push('/orders')} />
+            <Item label={t('wishlist')} onPress={() => router.push('/wishlist')} />
+            <Item label={t('messages')} count={unread?.messages} onPress={() => router.push('/messages')} />
+            <Item label={t('notifications')} count={unread?.notifications} onPress={() => router.push('/notifications')} />
+            <Item label={t('udubWallet')} onPress={() => router.push('/wallet')} />
+            <Item label={t('addresses')} onPress={() => router.push('/addresses')} last />
+          </View>
+        ) : null}
+
         <View style={[ui.card, { paddingVertical: S.xs }]}>
           <Item label={t('help')} onPress={() => open(config.data?.links.help)} />
           <Item label={t('privacy')} onPress={() => open(config.data?.links.privacy)} />
@@ -113,11 +133,18 @@ export default function AccountScreen() {
   );
 }
 
-function Item({ label, onPress, last }: { label: string; onPress: () => void; last?: boolean }) {
+function Item({ label, onPress, last, count }: { label: string; onPress: () => void; last?: boolean; count?: number }) {
   return (
     <Pressable onPress={onPress} style={[s.item, !last && { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: C.line }]}>
       <Text style={ui.body}>{label}</Text>
-      <Text style={s.muted}>›</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: S.s }}>
+        {count ? (
+          <View style={s.count}>
+            <Text style={s.countText}>{count > 99 ? '99+' : count}</Text>
+          </View>
+        ) : null}
+        <Text style={s.muted}>›</Text>
+      </View>
     </Pressable>
   );
 }
@@ -131,5 +158,15 @@ const s = StyleSheet.create({
   lang: { flex: 1, height: 44, borderRadius: R.m, borderWidth: 1, borderColor: C.line, alignItems: 'center', justifyContent: 'center' },
   langOn: { backgroundColor: C.accent, borderColor: C.accent },
   langText: { fontSize: 15, fontWeight: '600', color: C.text },
+  count: {
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: C.lime,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+  },
+  countText: { color: '#fff', fontSize: 12, fontWeight: '800' },
   item: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: S.m },
 });

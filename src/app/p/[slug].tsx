@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ProductRail } from '@/components/product-rail';
 import { Button, ErrorView, Loading, Stars, styles as ui } from '@/components/ui';
-import { ApiError } from '@/lib/api';
+import { api, ApiError } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { addToCart } from '@/lib/cart';
 import { useI18n } from '@/lib/i18n';
@@ -31,6 +31,8 @@ export default function ProductScreen() {
   const [photo, setPhoto] = useState(0);
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState(false);
+  const [liked, setLiked] = useState<boolean | null>(null);
+  const [chatting, setChatting] = useState(false);
 
   const p = r.data?.product;
 
@@ -56,6 +58,31 @@ export default function ProductScreen() {
     !p.variants.length || p.variants.some((v) => v.color === c && v.inStock && (!size || p.sizes.length <= 1 || v.size === size));
   const sizeOk = (z: string) =>
     !p.variants.length || p.variants.some((v) => v.size === z && v.inStock && (!color || p.colors.length <= 1 || v.color === color));
+
+  const isLiked = liked ?? p.liked;
+  const toggleLike = async () => {
+    if (!user) return router.push('/login');
+    const next = !isLiked;
+    setLiked(next);
+    try {
+      await api('/wishlist', { method: 'POST', body: { productId: p.id, liked: next } });
+    } catch {
+      setLiked(!next);
+    }
+  };
+
+  const messageSeller = async () => {
+    if (!user) return router.push('/login');
+    setChatting(true);
+    try {
+      const r = await api<{ id: string }>('/messages/start', { method: 'POST', body: { storeId: p.store.id, productId: p.id } });
+      router.push({ pathname: '/messages/[id]', params: { id: r.id } });
+    } catch (e) {
+      Alert.alert(e instanceof ApiError && e.status !== 0 ? e.message : t('errNetwork'));
+    } finally {
+      setChatting(false);
+    }
+  };
 
   const add = async () => {
     if (!user) return router.push('/login');
@@ -105,7 +132,12 @@ export default function ProductScreen() {
 
         <View style={{ padding: S.l, gap: S.s }}>
           {p.brand ? <Text style={s.brand}>{p.brand}</Text> : null}
-          <Text style={ui.h1}>{p.name}</Text>
+          <View style={{ flexDirection: 'row', gap: S.m, alignItems: 'flex-start' }}>
+            <Text style={[ui.h1, { flex: 1 }]}>{p.name}</Text>
+            <Pressable onPress={toggleLike} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('wishlist')}>
+              <Text style={{ fontSize: 28, color: isLiked ? C.red : C.muted }}>{isLiked ? '♥' : '♡'}</Text>
+            </Pressable>
+          </View>
           {p.short ? <Text style={s.muted}>{p.short}</Text> : null}
           <View style={s.priceRow}>
             <Text style={s.price}>{fmtMoney(price)}</Text>
@@ -146,6 +178,7 @@ export default function ProductScreen() {
             <Text style={{ flex: 1, color: C.text }}>{t('soldBy', { store: p.store.name })}</Text>
             <Text style={s.muted}>›</Text>
           </Pressable>
+          <Button title={t('messageSeller')} kind="outline" onPress={messageSeller} busy={chatting} />
 
           <Block title={t('description')} text={p.description} />
           <Block title={t('howToUse')} text={p.howToUse} />
