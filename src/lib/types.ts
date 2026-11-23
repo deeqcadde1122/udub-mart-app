@@ -149,7 +149,12 @@ export type OrderDetail = {
     lineTotal: number;
     shipmentId: string | null;
     returnStatus: string | null;
+    /** Received: may rate (and re-rate) it. */
+    canReview: boolean;
+    myRating: number | null;
+    return: ReturnInfo;
   }[];
+  replacementEnabled: boolean;
   shipments: {
     id: string;
     storeName: string;
@@ -280,3 +285,9 @@ export type Cart = {
   delivery: string;
   shipments: { storeName: string; storeSlug: string; deliveredBy: 'udub' | 'store'; fee: number; time: string; subtotal: number }[];
 };
+
+/** What the customer may do about returning one order line (website lib/returns.ts). */
+export type ReturnInfo =
+  | { state: 'off' }
+  | { state: 'open' | 'closed'; until: string | null }
+  | { state: 'requested'; status: 'REQUESTED' | 'APPROVED' | 'REJECTED'; kind: 'RETURN' | 'REPLACE'; note: string };

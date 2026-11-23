@@ -13,7 +13,8 @@ import type { User } from '@/lib/types';
 
 // Sign in, step 2: the 6-digit code → a token for this device (POST /auth/verify).
 export default function VerifyScreen() {
-  const { phone } = useLocalSearchParams<{ phone: string }>();
+  // phone: the code came by phone sign-in; ticket: the second step after Google (two-step sign-in).
+  const { phone, ticket } = useLocalSearchParams<{ phone?: string; ticket?: string }>();
   const { t, lang } = useI18n();
   const { signedIn } = useAuth();
   const [code, setCode] = useState('');
@@ -34,7 +35,7 @@ export default function VerifyScreen() {
     try {
       const r = await api<{ token: string; user: User; needsName: boolean }>('/auth/verify', {
         method: 'POST',
-        body: { phone, code: c, lang, device: deviceName() },
+        body: { ...(ticket ? { ticket } : { phone }), code: c, lang, device: deviceName() },
       });
       signedIn(r.token, r.user);
       if (r.needsName) router.replace('/name');
@@ -60,7 +61,7 @@ export default function VerifyScreen() {
     <KeyboardAvoidingView style={ui.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={{ padding: S.xl, gap: S.m }} keyboardShouldPersistTaps="handled">
         <Text style={ui.h2}>{t('enterCode')}</Text>
-        <Text style={{ color: C.muted }}>{t('codeSentTo', { phone: `+${phone}` })}</Text>
+        <Text style={{ color: C.muted }}>{ticket ? t('twoStepNote') : t('codeSentTo', { phone: `+${phone}` })}</Text>
         <TextInput
           value={code}
           onChangeText={(v) => {
@@ -77,11 +78,13 @@ export default function VerifyScreen() {
         />
         {err ? <Text style={ui.error}>{err}</Text> : null}
         <Button title={t('verify')} onPress={() => verify()} busy={busy} disabled={code.length !== 6} style={{ marginTop: S.s }} />
-        <Pressable onPress={resend} disabled={wait > 0} style={{ alignSelf: 'center', padding: S.s }}>
-          <Text style={{ color: wait > 0 ? C.muted : C.accent, fontWeight: '600' }}>
-            {wait > 0 ? t('resendIn', { s: wait }) : t('resend')}
-          </Text>
-        </Pressable>
+        {phone ? (
+          <Pressable onPress={resend} disabled={wait > 0} style={{ alignSelf: 'center', padding: S.s }}>
+            <Text style={{ color: wait > 0 ? C.muted : C.accent, fontWeight: '600' }}>
+              {wait > 0 ? t('resendIn', { s: wait }) : t('resend')}
+            </Text>
+          </Pressable>
+        ) : null}
         <Pressable onPress={() => router.back()} style={{ alignSelf: 'center', padding: S.s }}>
           <Text style={{ color: C.accent }}>{t('changeNumber')}</Text>
         </Pressable>

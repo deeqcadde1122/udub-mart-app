@@ -171,7 +171,12 @@ function Checkout() {
         <View style={[ui.card, { gap: S.s }]}>
           <Text style={s.label}>{t('promoCode')}</Text>
           <View style={{ flexDirection: 'row', gap: S.s }}>
-            <TextInput value={promoInput} onChangeText={setPromoInput} autoCapitalize="characters" style={[ui.input, { flex: 1, minWidth: 0 }]} />
+            <TextInput
+              value={promoInput}
+              onChangeText={setPromoInput}
+              autoCapitalize="characters"
+              style={[ui.input, { flex: 1, minWidth: 0 }]}
+            />
             <Button title={t('promoApply')} kind="outline" onPress={() => setPromo(promoInput.trim())} style={{ paddingHorizontal: S.l }} />
           </View>
           {cart.promo ? (

@@ -15,6 +15,7 @@ export function appHref(path: string): Href {
   if (kind === 'orders' && slug) return { pathname: '/order/[trackingId]', params: { trackingId: slug } };
   if (kind === 'orders') return '/orders';
   if (kind === 'messages' && slug) return { pathname: '/messages/[id]', params: { id: slug } };
+  if (kind === 'messages' && q.get('n')) return { pathname: '/messages/[id]', params: { id: q.get('n')! } };
   if (kind === 'messages') return '/messages';
   if (kind === 'wishlist') return '/wishlist';
   if (kind === 'wallet' || kind === 'rewards') return '/wallet';

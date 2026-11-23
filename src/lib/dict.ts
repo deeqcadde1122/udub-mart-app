@@ -248,6 +248,35 @@ const E = {
   inviteFriends: ['Casuun saaxiibada', 'Invite Friends'],
   yourInviteLink: ['Linkiga martiqaadkaaga', 'Your invite link'],
   share: ['La wadaag', 'Share'],
+  // alerts (push)
+  getAlerts: ['Hel ogeysiisyada dalabka', 'Get order alerts'],
+  getAlertsSub: ['Shid ogeysiisyada si aad u ogaato marka dalabkaagu dhaqaaqo.', 'Turn on notifications to hear when your order moves.'],
+  // Google
+  continueGoogle: ['Ku sii wad Google', 'Continue with Google'],
+  or: ['ama', 'or'],
+  errGoogle: ['Galitaanka Google ma shaqayn. Isku day mar kale.', "Google sign-in didn't work. Try again."],
+  twoStepNote: [
+    'Galitaan laba-tallaabo ah: geli koodhka aan taleefankaaga u dirnay si aad u dhammaystirto galitaanka Google.',
+    'Two-step sign-in: enter the code we sent to your phone to finish signing in with Google.',
+  ],
+  // reviews
+  writeReview: ['Qor faallo', 'Write a review'],
+  yourRating: ['Qiimayntaada', 'Your rating'],
+  yourReview: ['Faalladaada (ikhtiyaari)', 'Your review (optional)'],
+  submit: ['Dir', 'Submit'],
+  reviewSaved: ['Mahadsanid! Faalladaada waa la kaydiyay.', 'Thank you! Your review was saved.'],
+  // returns
+  returnItem: ['Celi', 'Return'],
+  replaceItem: ['Beddel', 'Replace'],
+  returnUntil: ['Waxaad celin kartaa ilaa {date}', 'You can return this item until {date}'],
+  returnReason: ['Maxaad u celinaysaa?', 'Why are you returning it?'],
+  replaceReason: ['Maxaad u rabtaa in laguu beddelo?', 'Why do you want a replacement?'],
+  sendReturn: ['Dir codsiga celinta', 'Send return request'],
+  returnSent: ['Codsigaaga celinta waa la diray. Udub ayaa eegi doonta.', 'Your return request was sent. Udub will review it.'],
+  returnClosedErr: ['Alaabtan hadda lama celin karo.', "This item can't be returned now."],
+  ret_REQUESTED: ['Codsiga celinta: waa la sugayaa', 'Return request: waiting'],
+  ret_APPROVED: ['Celinta waa la oggolaaday', 'Return approved'],
+  ret_REJECTED: ['Codsiga celinta waa la diiday', 'Return request declined'],
 } as const;
 
 export type Key = keyof typeof E;

@@ -22,9 +22,23 @@ at `https://e.udub.so/api/mobile/` (repo `udub-store`, see its `docs/MOBILE_API.
 - **Addresses** (Home/Office) with "Use my location" for the delivery pin
 - **Wishlist** (heart on the product page), **Messages** (chat with a store, messages from
   Udub, "Message the seller"), **Notifications**, **Wallet** (balance, points, invite link)
-- **Account**: menu with unread counts, Somali/English, help/privacy/terms, sign out, delete account
+- **Account**: menu with unread counts, order alerts on/off, Somali/English, help/privacy/terms,
+  sign out, delete account
+- **Push notifications** (order updates, chat, messages from Udub): the website sends them; the app
+  asks permission, registers the phone and opens the right screen when one is tapped
+- **Reviews and returns**: rate a delivered item (stars, optional text), ask to return or replace
+  it inside the return window
+- **Google sign-in** (hidden until set up — see below), including two-step sign-in
 
-Not yet: push notifications, Google sign-in, returns and reviews from the app.
+## Still to set up (needs the owner's accounts)
+
+- **Pushes** need an EAS project id (`npx eas-cli@latest init` with an Expo account) — it is
+  written into `app.json` (`extra.eas.projectId`) — and a development or store build: Expo Go on
+  Android no longer receives remote pushes. Optional `EXPO_ACCESS_TOKEN` on the website server.
+- **Google sign-in** needs OAuth client ids from Google Cloud (iOS, Android, web) in `app.json`
+  `extra.google`, and the same ids in the website's `GOOGLE_MOBILE_CLIENT_IDS`.
+
+Not yet: review photos from the app.
 
 ## Try it on your phone
 

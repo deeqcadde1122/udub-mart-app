@@ -4,6 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { ItemActions } from '@/components/item-actions';
 import { SignedIn } from '@/components/signed-in';
 import { Button, ErrorView, Loading, styles as ui } from '@/components/ui';
 import { api, ApiError } from '@/lib/api';
@@ -136,17 +137,20 @@ function Order() {
           {o.items
             .filter((i) => i.shipmentId === sh.id || (!i.shipmentId && o.shipments.length === 1))
             .map((i) => (
-              <View key={i.id} style={s.item}>
-                <Image source={i.image ?? undefined} style={s.img} />
-                <View style={{ flex: 1 }}>
-                  <Text style={ui.body} numberOfLines={2}>
-                    {i.name}
-                  </Text>
-                  {i.size || i.color ? <Text style={s.muted}>{[i.color, i.size].filter(Boolean).join(' · ')}</Text> : null}
-                  <Text style={s.muted}>
-                    {i.qty} × {fmtMoney(i.unitPrice)}
-                  </Text>
+              <View key={i.id} style={{ gap: S.xs }}>
+                <View style={s.item}>
+                  <Image source={i.image ?? undefined} style={s.img} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={ui.body} numberOfLines={2}>
+                      {i.name}
+                    </Text>
+                    {i.size || i.color ? <Text style={s.muted}>{[i.color, i.size].filter(Boolean).join(' · ')}</Text> : null}
+                    <Text style={s.muted}>
+                      {i.qty} × {fmtMoney(i.unitPrice)}
+                    </Text>
+                  </View>
                 </View>
+                <ItemActions item={i} replacementEnabled={o.replacementEnabled} onChanged={r.reload} />
               </View>
             ))}
         </View>

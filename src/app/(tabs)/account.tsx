@@ -1,7 +1,7 @@
 import { router, useFocusEffect } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, styles as ui } from '@/components/ui';
@@ -37,6 +37,12 @@ export default function AccountScreen() {
       const r = await api<{ user: User }>('/me', { method: 'PATCH', body: { lang: l } }).catch(() => null);
       if (r) setUser(r.user);
     }
+  };
+
+  // "Get order alerts" = User.notifyOn on the website: it decides pushes (and other reminders).
+  const setAlerts = async (on: boolean) => {
+    const r = await api<{ user: User }>('/me', { method: 'PATCH', body: { notifyOn: on } }).catch(() => null);
+    if (r) setUser(r.user);
   };
 
   const open = (url?: string) => url && WebBrowser.openBrowserAsync(url);
@@ -104,6 +110,16 @@ export default function AccountScreen() {
         </View>
 
         {user ? (
+          <View style={[ui.card, s.alerts]}>
+            <View style={{ flex: 1 }}>
+              <Text style={ui.body}>{t('getAlerts')}</Text>
+              <Text style={s.muted}>{t('getAlertsSub')}</Text>
+            </View>
+            <Switch value={user.notifyOn} onValueChange={setAlerts} trackColor={{ true: C.accent }} />
+          </View>
+        ) : null}
+
+        {user ? (
           <View style={[ui.card, { paddingVertical: S.xs }]}>
             <Item label={t('myOrders')} onPress={() => router.push('/orders')} />
             <Item label={t('wishlist')} onPress={() => router.push('/wishlist')} />
@@ -155,6 +171,7 @@ const s = StyleSheet.create({
   stat: { flex: 1, backgroundColor: C.bg, borderRadius: R.m, padding: S.m },
   statValue: { fontSize: 18, fontWeight: '800', color: C.text },
   langRow: { flexDirection: 'row', gap: S.s },
+  alerts: { flexDirection: 'row', alignItems: 'center', gap: S.m },
   lang: { flex: 1, height: 44, borderRadius: R.m, borderWidth: 1, borderColor: C.line, alignItems: 'center', justifyContent: 'center' },
   langOn: { backgroundColor: C.accent, borderColor: C.accent },
   langText: { fontSize: 15, fontWeight: '600', color: C.text },

@@ -33,6 +33,12 @@
         }
       ],
       [
+        "expo-notifications",
+        {
+          "color": "#0C6060"
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#0E494B",
@@ -42,7 +48,12 @@
       ]
     ],
     "extra": {
-      "apiUrl": "https://e.udub.so/api/mobile"
+      "apiUrl": "https://e.udub.so/api/mobile",
+      "google": {
+        "iosClientId": "",
+        "androidClientId": "",
+        "webClientId": ""
+      }
     },
     "experiments": {
       "typedRoutes": true,
